@@ -6,7 +6,7 @@ import numpy as np
 
 from functools import partial
 from tkinter import *
-from tkinter.filedialog import asksaveasfile
+from tkinter.filedialog import asksaveasfile, askopenfile
 
 from matplotlib import pyplot as plt
 
@@ -26,8 +26,9 @@ class Entries:
         self.parent_window = parent_window
 
     # adding of new entry (добавление нового текстового поля)
-    def add_entry(self):
+    def add_entry(self, entryText=""):
         new_entry = Entry(self.parent_window)
+        new_entry.insert(0,entryText)
         new_entry.icursor(0)
         new_entry.focus()
         new_entry.pack()
