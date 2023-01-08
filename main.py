@@ -136,7 +136,6 @@ class Commands:
     def plot(self, *args, **kwargs):
         def is_not_blank(s):
             return bool(s and not s.isspace())
-
         self._state.reset_state()
         list_of_function = []
         for entry in self.parent_window.entries.entries_list:
@@ -181,6 +180,16 @@ class Commands:
         self._state.save_state()
         return self
     
+    def load(self):
+        f = askopenfile()
+        if f != None:
+            dict = json.load(f)
+            for entry in self.parent_window.entries.entries_list:
+                entry.destroy()
+            self.parent_window.entries.entries_list = []
+            for entryText in dict['list_of_function']:
+                self.parent_window.entries.add_entry(entryText)
+            self.parent_window.commands.plot()
 
 
 # class for buttons storage (класс для хранения кнопок)
@@ -222,7 +231,9 @@ class ModalWindow:
 
     def cancel(self):
         self.top.destroy()
-
+    def continue_deleting(self, entry, entries_list):
+        self.top.destroy()
+        entries_list.pop(entries_list.index(entry)).destroy()
 
 # app class (класс приложения)
 class App(Tk):
@@ -253,9 +264,9 @@ class App(Tk):
     def create_menu(self):
         menu = Menu(self)
         self.config(menu=menu)
-
         file_menu = Menu(menu)
         file_menu.add_command(label="Save as...", command=self.commands.get_command_by_name('save_as'))
+        file_menu.add_command(label="Load", command=self.commands.get_command_by_name('load'))
         menu.add_cascade(label="File", menu=file_menu)
 
 
@@ -272,11 +283,14 @@ if __name__ == "__main__":
     # command's registration (регистрация команд)
     commands_main.add_command('plot', commands_main.plot)
     commands_main.add_command('add_func', commands_main.add_func)
+    commands_main.add_command('delete_func', commands_main.delete_func)
     commands_main.add_command('save_as', commands_main.save_as)
+    commands_main.add_command('load', commands_main.load)
     # init app (создаем экземпляр приложения)
     app = App(buttons_main, plotter_main, commands_main, entries_main)
     # init add func button (добавляем кнопку добавления новой функции)
     app.add_button('add_func', 'Добавить функцию', 'add_func', hot_key='<Control-a>')
+    app.add_button('delete_func', 'Удалить функцию', 'delete_func', hot_key='<Control-z>')
     # init first entry (создаем первое поле ввода)
     entries_main.add_entry()
     app.create_menu()
