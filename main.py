@@ -37,7 +37,7 @@ class Entries:
             plot_button.pack_forget()
         self.parent_window.add_button('plot', 'Plot', 'plot', hot_key='<Return>')
         self.entries_list.append(new_entry)
-        
+
     def delete_entry(self):
         entry = self.parent_window.focus_get()
         if (type(entry) == Entry):
@@ -146,12 +146,12 @@ class Commands:
                 list_of_function.append(get_func_str)
             else:
                 if self.__empty_entry_counter == 0:
-                    mw = ModalWindow(self.parent_window, title='Пустая строка', labeltext='Это пример модального окна, '
-                                                                                          'возникающий, если ты ввел '
-                                                                                          'пустую '
-                                                                                          'строку. С этим ничего '
-                                                                                          'делать не нужно. '
-                                                                                          'Просто нажми OK :)')
+                    mw = ModalWindow(self.parent_window, title='Empty Line', labeltext='This is an example of modal window, '
+                                                                                          'which appears, if you enter'
+                                                                                          'empty line'
+                                                                                          'Do not worry about that'
+                                                                                        
+                                                                                          'Just click OK :)')
                     ok_button = Button(master=mw.top, text='OK', command=mw.cancel)
                     mw.add_button(ok_button)
                     self.__empty_entry_counter = 1
@@ -171,10 +171,16 @@ class Commands:
         self.__forget_canvas()
         self.__forget_navigation()
         self.parent_window.entries.add_entry()
+    
+    def delete_func(self, *args, **kwargs):
+        self.__forget_canvas()
+        self.__forget_navigation()
+        self.parent_window.entries.delete_entry()
 
     def save_as(self):
         self._state.save_state()
         return self
+    
 
 
 # class for buttons storage (класс для хранения кнопок)
