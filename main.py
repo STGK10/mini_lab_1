@@ -37,6 +37,24 @@ class Entries:
             plot_button.pack_forget()
         self.parent_window.add_button('plot', 'Plot', 'plot', hot_key='<Return>')
         self.entries_list.append(new_entry)
+        
+    def delete_entry(self):
+        entry = self.parent_window.focus_get()
+        if (type(entry) == Entry):
+            if entry.get() != "":
+                mw = ModalWindow(self.parent_window, title='Enter Function', labeltext='Do you really want to delete that line?'
+                                                            ', Press Continue, or - Cancel')
+                callback = partial(mw.continue_deleting, entry=entry, entries_list=self.entries_list)
+                continue_button = Button(master=mw.top, text='Continue', command=callback)
+                cancel_button = Button(master=mw.top, text="Cancel", command=mw.cancel)
+                mw.add_button(continue_button)
+                mw.add_button(cancel_button)
+            else:
+                self.entries_list.pop(self.entries_list.index(entry)).destroy()
+            plot_button = self.parent_window.get_button_by_name('plot')
+            if plot_button:
+                plot_button.pack_forget()
+            self.parent_window.add_button('plot', 'Plot', 'plot', hot_key='<Return>')
 
 
 # class for plotting (класс для построения графиков)
